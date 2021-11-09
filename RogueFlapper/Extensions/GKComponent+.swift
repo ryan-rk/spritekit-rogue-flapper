@@ -1,5 +1,5 @@
 //
-//  ExtensionsGKComponent.swift
+//  GKComponent+.swift
 //  RogueFlapper
 //
 //  Created by Ryan RK on 30/10/2021.

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		910AFECB272D066F00E93738 /* ExtensionsGKComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910AFECA272D066F00E93738 /* ExtensionsGKComponent.swift */; };
+		910AFECB272D066F00E93738 /* GKComponent+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910AFECA272D066F00E93738 /* GKComponent+.swift */; };
 		910AFECD272D45E100E93738 /* InfScrollComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910AFECC272D45E100E93738 /* InfScrollComponent.swift */; };
 		910AFECF272D4C2600E93738 /* BgManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910AFECE272D4C2600E93738 /* BgManager.swift */; };
 		910AFED3272DBCBF00E93738 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910AFED2272DBCBF00E93738 /* Background.swift */; };
@@ -24,7 +24,10 @@
 		9136AC7A27247CF2003F80CB /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9136AC7927247CF2003F80CB /* Protocols.swift */; };
 		91389EEE2725AE6000F3D363 /* GameInputNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91389EED2725AE6000F3D363 /* GameInputNode.swift */; };
 		91389EF02725B0A900F3D363 /* GameInputComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91389EEF2725B0A900F3D363 /* GameInputComponent.swift */; };
-		91389EF22725BDBD00F3D363 /* HelperExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91389EF12725BDBD00F3D363 /* HelperExtensions.swift */; };
+		91389EF22725BDBD00F3D363 /* CoreGraphics+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91389EF12725BDBD00F3D363 /* CoreGraphics+.swift */; };
+		9165CEAF27377D60005B07AA /* SKNode+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9165CEAE27377D60005B07AA /* SKNode+.swift */; };
+		9165CEB12737E76B005B07AA /* EnemyMovementComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9165CEB02737E76B005B07AA /* EnemyMovementComponent.swift */; };
+		9165CEB32737EB64005B07AA /* AgentComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9165CEB22737EB64005B07AA /* AgentComponent.swift */; };
 		91704181272A6D5500B5214B /* PlayerMovementComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91704180272A6D5500B5214B /* PlayerMovementComponent.swift */; };
 		91704183272AFD6C00B5214B /* Enemy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91704182272AFD6C00B5214B /* Enemy.swift */; };
 		91704185272B00B600B5214B /* EnemyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91704184272B00B600B5214B /* EnemyManager.swift */; };
@@ -61,7 +64,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		910AFECA272D066F00E93738 /* ExtensionsGKComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionsGKComponent.swift; sourceTree = "<group>"; };
+		910AFECA272D066F00E93738 /* GKComponent+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GKComponent+.swift"; sourceTree = "<group>"; };
 		910AFECC272D45E100E93738 /* InfScrollComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfScrollComponent.swift; sourceTree = "<group>"; };
 		910AFECE272D4C2600E93738 /* BgManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BgManager.swift; sourceTree = "<group>"; };
 		910AFED2272DBCBF00E93738 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
@@ -78,7 +81,10 @@
 		9136AC7927247CF2003F80CB /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		91389EED2725AE6000F3D363 /* GameInputNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInputNode.swift; sourceTree = "<group>"; };
 		91389EEF2725B0A900F3D363 /* GameInputComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInputComponent.swift; sourceTree = "<group>"; };
-		91389EF12725BDBD00F3D363 /* HelperExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperExtensions.swift; sourceTree = "<group>"; };
+		91389EF12725BDBD00F3D363 /* CoreGraphics+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreGraphics+.swift"; sourceTree = "<group>"; };
+		9165CEAE27377D60005B07AA /* SKNode+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKNode+.swift"; sourceTree = "<group>"; };
+		9165CEB02737E76B005B07AA /* EnemyMovementComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyMovementComponent.swift; sourceTree = "<group>"; };
+		9165CEB22737EB64005B07AA /* AgentComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentComponent.swift; sourceTree = "<group>"; };
 		91704180272A6D5500B5214B /* PlayerMovementComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMovementComponent.swift; sourceTree = "<group>"; };
 		91704182272AFD6C00B5214B /* Enemy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemy.swift; sourceTree = "<group>"; };
 		91704184272B00B600B5214B /* EnemyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyManager.swift; sourceTree = "<group>"; };
@@ -129,10 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				9136AC7927247CF2003F80CB /* Protocols.swift */,
-				91389EF12725BDBD00F3D363 /* HelperExtensions.swift */,
 				9125D9142723B8B90072E005 /* HelperObjects.swift */,
 				9132C61A2729AFFA0048D539 /* HelperFunctions.swift */,
-				910AFECA272D066F00E93738 /* ExtensionsGKComponent.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -148,6 +152,8 @@
 				91704180272A6D5500B5214B /* PlayerMovementComponent.swift */,
 				9136AC6F27242FED003F80CB /* RenderComponent.swift */,
 				910AFECC272D45E100E93738 /* InfScrollComponent.swift */,
+				9165CEB02737E76B005B07AA /* EnemyMovementComponent.swift */,
+				9165CEB22737EB64005B07AA /* AgentComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -173,6 +179,16 @@
 			path = Nodes;
 			sourceTree = "<group>";
 		};
+		9165CEAB27377C25005B07AA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				910AFECA272D066F00E93738 /* GKComponent+.swift */,
+				91389EF12725BDBD00F3D363 /* CoreGraphics+.swift */,
+				9165CEAE27377D60005B07AA /* SKNode+.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		917A04D427231EE300F8ACF9 = {
 			isa = PBXGroup;
 			children = (
@@ -196,6 +212,7 @@
 		917A04DF27231EE300F8ACF9 /* RogueFlapper */ = {
 			isa = PBXGroup;
 			children = (
+				9165CEAB27377C25005B07AA /* Extensions */,
 				917A04E027231EE300F8ACF9 /* AppDelegate.swift */,
 				917A04ED27231EE500F8ACF9 /* Assets.xcassets */,
 				9136AC712724325B003F80CB /* ColliderType.swift */,
@@ -365,20 +382,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				910AFECF272D4C2600E93738 /* BgManager.swift in Sources */,
+				9165CEB32737EB64005B07AA /* AgentComponent.swift in Sources */,
 				9125D91B2723C1F50072E005 /* NodeComponent.swift in Sources */,
 				9132C61D2729B04C0048D539 /* Bullet.swift in Sources */,
 				917A04E727231EE300F8ACF9 /* GameScene.swift in Sources */,
 				917A04E927231EE300F8ACF9 /* GameViewController.swift in Sources */,
 				9136AC7A27247CF2003F80CB /* Protocols.swift in Sources */,
 				9136AC7827246AEE003F80CB /* ScreenBound.swift in Sources */,
+				9165CEB12737E76B005B07AA /* EnemyMovementComponent.swift in Sources */,
 				91704185272B00B600B5214B /* EnemyManager.swift in Sources */,
 				9125D9172723BFC30072E005 /* PhysicsComponent.swift in Sources */,
 				9125D9152723B8B90072E005 /* HelperObjects.swift in Sources */,
 				91FEF8E9272862EF00775551 /* PlayerFlapComponent.swift in Sources */,
+				9165CEAF27377D60005B07AA /* SKNode+.swift in Sources */,
 				910AFED3272DBCBF00E93738 /* Background.swift in Sources */,
 				91F4DD95272E3AB700A3133E /* ObstacleManager.swift in Sources */,
-				91389EF22725BDBD00F3D363 /* HelperExtensions.swift in Sources */,
-				910AFECB272D066F00E93738 /* ExtensionsGKComponent.swift in Sources */,
+				91389EF22725BDBD00F3D363 /* CoreGraphics+.swift in Sources */,
+				910AFECB272D066F00E93738 /* GKComponent+.swift in Sources */,
 				9136AC742724367E003F80CB /* GameplayConf.swift in Sources */,
 				9136AC722724325B003F80CB /* ColliderType.swift in Sources */,
 				91389EEE2725AE6000F3D363 /* GameInputNode.swift in Sources */,

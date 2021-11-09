@@ -74,7 +74,6 @@ class GameInputComponent: GKComponent {
     }
     
     override func update(deltaTime seconds: TimeInterval) {
-        print("updated")
     }
 
 }

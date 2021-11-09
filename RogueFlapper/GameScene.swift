@@ -8,21 +8,51 @@
 import SpriteKit
 import GameplayKit
 
+/// The names and z-positions of each layer in a level's world.
+enum WorldLayer: CGFloat {
+    
+    // Newly added layer is required to be added for allLayers and nodeName properties
+    case background = -10
+    case world = 0
+    case interactable = 10
+    case foreground = 20
+    case gameInput = 30
+    case ui = 40
+    
+    static var allLayers = [background, world, interactable, foreground, gameInput, ui]
+    
+    var nodeName: String {
+        switch self {
+        case .background: return "background"
+        case .world: return "world"
+        case .interactable: return "interactable"
+        case .foreground: return "foreground"
+        case .gameInput: return "gameInput"
+        case .ui: return "ui"
+        }
+    }
+}
+
+
 class GameScene: SKScene {
     
     var worldLayerNodes = [WorldLayer: SKNode]()
     var entities = Set<GKEntity>()
     
     let player = Player()
-//    let screenBound = ScreenBound()
-//    let enemyManager = EnemyManager()
-    let bgManager = BgManager()
-    let obstacleManager = ObstacleManager()
+    let screenBound = ScreenBound()
+    let beeEnemyManager = EnemyManager(enemyType: .beeEnemy)
+    let mosquitoEnemyManager = EnemyManager(enemyType: .mosquitoEnemy)
+//    let spiderEnemyManager = EnemyManager(enemyType: .spiderEnemy)
+//    let bgManager = BgManager()
+//    let obstacleManager = ObstacleManager()
     
     lazy var componentSystems: [GKComponentSystem] = {
         let infScrollComponentSystem = GKComponentSystem(componentClass: InfScrollComponent.self)
         let gameInputComponentSystem = GKComponentSystem(componentClass: GameInputComponent.self)
-        return [infScrollComponentSystem, gameInputComponentSystem]
+        let enemySpawnerComponentSystem = GKComponentSystem(componentClass: EnemySpawnerComponent.self)
+        let agentComponentSystem = GKComponentSystem(componentClass: AgentComponent.self)
+        return [infScrollComponentSystem, gameInputComponentSystem, enemySpawnerComponentSystem, agentComponentSystem]
     }()
     
     
@@ -37,15 +67,20 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = CGVector(dx: 0, dy: -4)
-        //physicsWorld.gravity = .zero
+//        physicsWorld.gravity = .zero
         
         loadWorldLayers()
-        bgManager.addEntities(to: self)
-//        addEntity(entity: screenBound)
-//        spawnPlayer(location: UIProp.displayCenter)
-        addEntity(entity: obstacleManager)
-//        addEntity(entity: enemyManager)
-//        attachGameInputNode()
+//        bgManager.addEntities(to: self)
+        addEntity(entity: screenBound)
+        spawnPlayer(location: UIProp.displayCenter)
+//        addEntity(entity: obstacleManager)
+        beeEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = 100
+        addEntity(entity: beeEnemyManager)
+        mosquitoEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = UIProp.displaySize.height - 100
+        addEntity(entity: mosquitoEnemyManager)
+//        spiderEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = UIProp.displaySize.height - 100
+//        addEntity(entity: spiderEnemyManager)
+        attachGameInputNode()
         
     }
     
@@ -62,9 +97,9 @@ class GameScene: SKScene {
         let dt = currentTime - self.lastUpdateTime
         
         // Update entities
-//        for entity in self.entities {
-//            entity.update(deltaTime: dt)
-//        }
+        for entity in self.entities {
+            entity.update(deltaTime: dt)
+        }
         
         // Update components
         for componentSystem in componentSystems {
@@ -103,7 +138,7 @@ class GameScene: SKScene {
     }
     
     
-    // MARK: - Helper functions
+    // MARK: - functions to manage entities and nodes
     
     func addNode(node: SKNode, toWorldLayer worldLayer: WorldLayer) {
         let worldLayerNode = worldLayerNodes[worldLayer]!
@@ -120,6 +155,7 @@ class GameScene: SKScene {
         if let entityNodeComponent = entity.component(ofType: NodeComponent.self) {
             addNode(node: entityNodeComponent.node, toWorldLayer: entityNodeComponent.renderLayer)
         }
+        
     }
     
     func removeEntity(entity: GKEntity) {

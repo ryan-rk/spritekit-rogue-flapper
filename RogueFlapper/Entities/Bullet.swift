@@ -17,23 +17,19 @@ class Bullet: GKEntity {
         let nodeComponent = NodeComponent(nodeName: "BulletNode", renderLayer: .interactable)
         addComponent(nodeComponent)
         
-        let renderComponent = RenderComponent(visualNode: SKSpriteNode(color: .blue, size: GameplayConf.Bullet.bulletSize))
+        let renderComponent = RenderComponent(spriteNode: SKSpriteNode(color: .white, size: GameplayConf.Bullet.bulletSize))
         addComponent(renderComponent)
         
-        setPhysicsInteraction()
         let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(rectangleOf: GameplayConf.Bullet.bulletSize), colliderType: .Projectile)
         addComponent(physicsComponent)
         physicsComponent.physicsBody.affectedByGravity = false
+        physicsComponent.setContactsInteractions(contactObjects: [.Boundary])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setPhysicsInteraction() {
-        ColliderType.addCollisionList(responder: .Projectile, colliders: [.Boundary])
-        ColliderType.addContactNotificationsList(responder: .Projectile, contacts: [.Boundary])
-    }
 }
 
 extension Bullet: ContactNotifiableType {

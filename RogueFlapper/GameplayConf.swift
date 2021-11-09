@@ -20,5 +20,8 @@ struct GameplayConf {
     
     struct Enemy {
         static let enemySize = CGSize(width: 32, height: 32)
+        static let beeEnemySize = CGSize(width: 32, height: 32)
+        static let spiderEnemySize = CGSize(width: 64, height: 64)
+        static let mosquitoEnemySize = CGSize(width: 16, height: 16)
     }
 }
