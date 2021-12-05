@@ -35,8 +35,8 @@ class Background: GKEntity {
         }
 
         if isInfScroll {
-            let infScrollComponent = InfScrollComponent(scrollBlocks: self.scrollBlocks, blocksGap: 0, speed: baseScrollSpeed * zposOffset)
-            addComponent(infScrollComponent)
+            let infScroll = InfScroll(scrollBlocks: self.scrollBlocks, blocksGap: 0, speed: baseScrollSpeed * zposOffset)
+            addComponent(infScroll)
         }
     }
     

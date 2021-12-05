@@ -29,11 +29,11 @@ enum EnemyType: String {
 class Enemy: GKEntity {
     
     let nodeComponent = NodeComponent(nodeName: "EnemyNode", renderLayer: .interactable)
-    let renderComponent = RenderComponent(spriteNode: SKSpriteNode(color: .gray, size: GameplayConf.Enemy.enemySize))
+    let renderComponent = SpriteRenderer(spriteNode: SKSpriteNode(color: .gray, size: GameplayConf.Enemy.enemySize))
 //    var physicsComponent: PhysicsComponent {
 //        return PhysicsComponent(physicsBody: SKPhysicsBody(rectangleOf: renderComponent.spriteNode.size+CGSize(width: 8, height: 8)), colliderType: .Enemy)
 //    }
-    let enemyMovementComponent = EnemyMovementComponent()
+    let enemyMovement = EnemyMovement()
 
 	// MARK: Initializer
     init(nodeSize: CGSize) {
@@ -46,7 +46,7 @@ class Enemy: GKEntity {
         physicsComponent.physicsBody.affectedByGravity = false
         physicsComponent.setContactsInteractions(contactObjects: [.Player, .Projectile])
         
-        addComponent(enemyMovementComponent)
+        addComponent(enemyMovement)
         
     }
     
@@ -104,7 +104,7 @@ class BeeEnemy: Enemy {
         nodeComponent.node.name = EnemyType.beeEnemy.rawValue + "EnemyNode"
         renderComponent.spriteNode.color = .red
         
-        enemyMovementComponent.moveby(pos: CGVector(dx: 0, dy: UIProp.displaySize.height-300), speed: 100) { [unowned self] in
+        enemyMovement.moveby(pos: CGVector(dx: 0, dy: UIProp.displaySize.height-300), speed: 100) { [unowned self] in
             if let gameScene = self.nodeComponent.node.scene as? GameScene {
                 gameScene.removeEntity(entity: self)
             }
@@ -135,24 +135,29 @@ class SpiderEnemy: Enemy {
 
 class MosquitoEnemy: Enemy {
     
+    let agentComponent = AgentComponent()
+    
     init() {
         super.init(nodeSize: GameplayConf.Enemy.mosquitoEnemySize)
         nodeComponent.node.name = EnemyType.mosquitoEnemy.rawValue + "EnemyNode"
         renderComponent.spriteNode.color = .blue
         
+        addComponent(agentComponent)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    override func didAddToScene() {
         var interceptGoal: GKGoal {
             guard let gameScene = nodeComponent.node.scene as? GameScene else {
                 return GKGoal(toWander: 1.0)
             }
             return GKGoal(toInterceptAgent: gameScene.player.agent, maxPredictionTime: 1.0)
         }
-        let agentBehavior = GKBehavior(goal: interceptGoal, weight: 100)
-        let agentComponent = AgentComponent(agentBehavior: agentBehavior)
-        addComponent(agentComponent)
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        agentComponent.agentGoals.append(interceptGoal)
+        agentComponent.goalsWeights = [0.1,100]
+        agentComponent.updateBehavior()
     }
 }

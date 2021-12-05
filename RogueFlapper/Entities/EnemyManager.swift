@@ -17,7 +17,7 @@ class EnemyManager: GKEntity {
         let nodeComponent = NodeComponent(nodeName: nodeName)
         addComponent(nodeComponent)
         
-        let renderComponent = RenderComponent(spriteNode: SKSpriteNode(color: .black, size: GameplayConf.Enemy.enemySize))
+        let renderComponent = SpriteRenderer(spriteNode: SKSpriteNode(color: .black, size: GameplayConf.Enemy.enemySize))
         addComponent(renderComponent)
         
         let enemySpawnerComponent = EnemySpawnerComponent(enemyType: enemyType)
@@ -78,7 +78,7 @@ class EnemySpawnerComponent: GKComponent {
         let randomVerticalPos = entityNode?.position.y ?? 0
         enemy.component(ofType: NodeComponent.self)?.node.position = CGPoint(x: randomHorizontalPos, y: randomVerticalPos)
         gameScene?.addEntity(entity: enemy)
-//        enemy.component(ofType: EnemyMovementComponent.self)?.moveby(pos: CGVector(dx: 0, dy: 50), speed: 0.5)
+//        enemy.component(ofType: EnemyMovement.self)?.moveby(pos: CGVector(dx: 0, dy: 50), speed: 0.5)
 //        if let gameScene = gameScene {
 //            enemy.component(ofType: ChasingComponent.self)?.startChasing(targetEntity: gameScene.player, speed: 2)
 //        }

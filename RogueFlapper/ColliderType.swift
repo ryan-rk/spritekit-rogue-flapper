@@ -27,6 +27,8 @@ struct ColliderType: OptionSet, Hashable {
     static var Player       : ColliderType { return self.init(rawValue: 1 << 1) }
     static var Enemy        : ColliderType { return self.init(rawValue: 1 << 2) }
     static var Projectile   : ColliderType { return self.init(rawValue: 1 << 3) }
+    static var Obstacle     : ColliderType { return self.init(rawValue: 1 << 4) }
+    /// After adding new collider type remember to add debug description
 
 
     // MARK: Hashable
@@ -51,6 +53,9 @@ struct ColliderType: OptionSet, Hashable {
         case ColliderType.Projectile.rawValue:
             return "ColliderType.Projectile"
                 
+        case ColliderType.Obstacle.rawValue:
+            return "ColliderType.Obstacle"
+            
         default:
             return "UnknownColliderType(\(self.rawValue))"
         }

@@ -41,18 +41,18 @@ class GameScene: SKScene {
     
     let player = Player()
     let screenBound = ScreenBound()
-    let beeEnemyManager = EnemyManager(enemyType: .beeEnemy)
-    let mosquitoEnemyManager = EnemyManager(enemyType: .mosquitoEnemy)
+//    let beeEnemyManager = EnemyManager(enemyType: .beeEnemy)
+//    let mosquitoEnemyManager = EnemyManager(enemyType: .mosquitoEnemy)
 //    let spiderEnemyManager = EnemyManager(enemyType: .spiderEnemy)
-//    let bgManager = BgManager()
-//    let obstacleManager = ObstacleManager()
+    let bgManager = BgManager()
+    let obstacleManager = ObstacleManager()
     
     lazy var componentSystems: [GKComponentSystem] = {
-        let infScrollComponentSystem = GKComponentSystem(componentClass: InfScrollComponent.self)
-        let gameInputComponentSystem = GKComponentSystem(componentClass: GameInputComponent.self)
-        let enemySpawnerComponentSystem = GKComponentSystem(componentClass: EnemySpawnerComponent.self)
-        let agentComponentSystem = GKComponentSystem(componentClass: AgentComponent.self)
-        return [infScrollComponentSystem, gameInputComponentSystem, enemySpawnerComponentSystem, agentComponentSystem]
+        let infScrollCompSys = GKComponentSystem(componentClass: InfScroll.self)
+        let gameInputCompSys = GKComponentSystem(componentClass: GameInput.self)
+        let enemySpawnerCompSys = GKComponentSystem(componentClass: EnemySpawnerComponent.self)
+        let agentCompSys = GKComponentSystem(componentClass: AgentComponent.self)
+        return [infScrollCompSys, gameInputCompSys, enemySpawnerCompSys, agentCompSys]
     }()
     
     
@@ -66,18 +66,18 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
-        physicsWorld.gravity = CGVector(dx: 0, dy: -4)
+        physicsWorld.gravity = CGVector(dx: 0, dy: -8)
 //        physicsWorld.gravity = .zero
         
         loadWorldLayers()
-//        bgManager.addEntities(to: self)
+        bgManager.addEntities(to: self)
         addEntity(entity: screenBound)
         spawnPlayer(location: UIProp.displayCenter)
-//        addEntity(entity: obstacleManager)
-        beeEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = 100
-        addEntity(entity: beeEnemyManager)
-        mosquitoEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = UIProp.displaySize.height - 100
-        addEntity(entity: mosquitoEnemyManager)
+        addEntity(entity: obstacleManager)
+//        beeEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = 100
+//        addEntity(entity: beeEnemyManager)
+//        mosquitoEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = UIProp.displaySize.height - 100
+//        addEntity(entity: mosquitoEnemyManager)
 //        spiderEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = UIProp.displaySize.height - 100
 //        addEntity(entity: spiderEnemyManager)
         attachGameInputNode()
@@ -130,9 +130,9 @@ class GameScene: SKScene {
     func attachGameInputNode() {
         let gameInputNode = GameInputNode(controlAreaSize: UIProp.displaySize - CGSize(width: 60, height: 60), controlAreaLocation: UIProp.displayCenter)
         if let gameInputComponentSystem = self.componentSystems.first(where: { componentSystem in
-            componentSystem.componentClass == GameInputComponent.self
+            componentSystem.componentClass == GameInput.self
         }){
-            gameInputNode.gameInputComponentSystem = gameInputComponentSystem
+            gameInputNode.gameInputCompSys = gameInputComponentSystem
         }
         addNode(node: gameInputNode, toWorldLayer: .gameInput)
     }
@@ -154,6 +154,7 @@ class GameScene: SKScene {
         
         if let entityNodeComponent = entity.component(ofType: NodeComponent.self) {
             addNode(node: entityNodeComponent.node, toWorldLayer: entityNodeComponent.renderLayer)
+            entity.didAddToScene()
         }
         
     }

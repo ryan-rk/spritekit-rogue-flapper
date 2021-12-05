@@ -10,6 +10,12 @@ import GameplayKit
 
 extension SKNode {
     
+    func addChildren(_ nodes: [SKNode]) {
+        for node in nodes {
+            addChild(node)
+        }
+    }
+    
     func addChildExt(_ node: SKNode) {
         addChild(node)
         node.didAddToParent(parent: self)

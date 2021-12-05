@@ -22,25 +22,30 @@ class Player: GKEntity {
         addComponent(nodeComponent)
         agent.delegate = nodeComponent.node
         
-        let renderComponent = RenderComponent(spriteNode: SKSpriteNode(color: .cyan, size: GameplayConf.Player.playerSize))
+//        let renderComponent = RenderComponent(spriteNode: SKSpriteNode(color: .cyan, size: GameplayConf.Player.playerSize))
+        let renderComponent = SpriteRenderer(spriteNode: SKSpriteNode(imageNamed: "chick-flap1"), size: GameplayConf.Player.playerSize)
         addComponent(renderComponent)
         
-        let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(rectangleOf: GameplayConf.Player.playerSize+CGSize(width: 16, height: 16)), colliderType: .Player)
+//        let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(rectangleOf: GameplayConf.Player.playerSize+CGSize(width: 16, height: 16)), colliderType: .Player)
+        let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(circleOfRadius: GameplayConf.Player.playerPbRadius), colliderType: .Player)
         addComponent(physicsComponent)
         physicsComponent.physicsBody.allowsRotation = false
         physicsComponent.setCollisionsInteractions(collisionObjects: [.Boundary])
         
-        let gameInputComponent = GameInputComponent()
-        addComponent(gameInputComponent)
+        let gameInput = GameInput()
+        addComponent(gameInput)
         
-        let playerFlapComponent = PlayerFlapComponent()
-        addComponent(playerFlapComponent)
+        let playerFlap = PlayerFlap()
+        addComponent(playerFlap)
         
-        let bulletShooterComponent = BulletShooterComponent()
-        addComponent(bulletShooterComponent)
+        let bulletShooter = BulletShooter()
+        addComponent(bulletShooter)
         
-        let playerMovementComponent = PlayerMovementComponent()
-        addComponent(playerMovementComponent)
+        let playerMovement = PlayerMovement()
+        addComponent(playerMovement)
+        
+        let animator = Animator(texturePrefix: "chick-flap", texturesCount: 3)
+        addComponent(animator)
         
     }
     

@@ -12,7 +12,7 @@ class GameInputNode: SKNode {
     
     private var controlArea: SKSpriteNode
     
-    var gameInputComponentSystem = GKComponentSystem(componentClass: GameInputComponent.self)
+    var gameInputCompSys = GKComponentSystem(componentClass: GameInput.self)
     
     init(controlAreaSize: CGSize, controlAreaLocation: CGPoint) {
         controlArea = SKSpriteNode(color: .clear, size: controlAreaSize)
@@ -29,30 +29,30 @@ class GameInputNode: SKNode {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for component in gameInputComponentSystem.components {
-            if let gameInputComponent = component as? GameInputComponent {
+        for component in gameInputCompSys.components {
+            if let gic = component as? GameInput {
                 if let currentView = scene?.view {
-                    gameInputComponent.touchBegan(touches: touches, currentView: currentView)
+                    gic.touchBegan(touches: touches, currentView: currentView)
                 }
             }
         }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for component in gameInputComponentSystem.components {
-            if let gameInputComponent = component as? GameInputComponent {
+        for component in gameInputCompSys.components {
+            if let gic = component as? GameInput {
                 if let currentView = scene?.view {
-                    gameInputComponent.touchMoved(touches: touches, currentView: currentView)
+                    gic.touchMoved(touches: touches, currentView: currentView)
                 }
             }
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for component in gameInputComponentSystem.components {
-            if let gameInputComponent = component as? GameInputComponent {
+        for component in gameInputCompSys.components {
+            if let gic = component as? GameInput {
                 if let currentView = scene?.view {
-                    gameInputComponent.touchEnded(touches: touches, currentView: currentView)
+                    gic.touchEnded(touches: touches, currentView: currentView)
                 }
             }
         }

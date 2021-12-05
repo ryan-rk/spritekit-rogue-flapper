@@ -11,7 +11,11 @@ import UIKit
 struct GameplayConf {
     
     struct Player {
-        static let playerSize = CGSize(width: 32, height: 32)
+        static let playerSize = CGSize(width: 64, height: 64)
+        static let playerPbPadding = 8
+        static var playerPbRadius: CGFloat {
+            return playerSize.height/2 - CGFloat(playerPbPadding)
+        }
     }
     
     struct Bullet {

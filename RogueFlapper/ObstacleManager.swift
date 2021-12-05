@@ -19,15 +19,17 @@ class ObstacleManager: GKEntity {
         addComponent(nodeComponent)
         
         let obstacleBlock1 = ObstacleBlock()
+        obstacleBlock1.position += CGPoint(x: 0, y: 16)
         scrollBlocks.append(obstacleBlock1)
         nodeComponent.node.addChild(obstacleBlock1)
         let obstacleBlock2 = ObstacleBlock()
+        obstacleBlock2.position += CGPoint(x: 0, y: 16)
         scrollBlocks.append(obstacleBlock2)
         nodeComponent.node.addChild(obstacleBlock2)
         
-        let infScrollComponent = InfScrollComponent(scrollBlocks: scrollBlocks, blocksGap: UIProp.displaySize.width * 1.2, speed: 100)
-        addComponent(infScrollComponent)
-        infScrollComponent.repositionCallback = {(block: SKNode) in
+        let infScroll = InfScroll(scrollBlocks: scrollBlocks, blocksGap: UIProp.displaySize.width * 1.2, speed: 100)
+        addComponent(infScroll)
+        infScroll.repositionCallback = {(block: SKNode) in
             if let obstacleBlock = block as? ObstacleBlock {
                 obstacleBlock.arrangeObstacles()
             }
@@ -43,19 +45,31 @@ class ObstacleManager: GKEntity {
 
 class ObstacleBlock: SKNode {
     
-    let blockHeight = UIProp.displaySize.height - 64
-    var partPadding: CGFloat {
-        return blockHeight / 20 }
-    var partSizeMinThres: CGFloat {
-        return blockHeight / 5 }
-    var partSizeMaxThres: CGFloat {
-        return blockHeight / 4 }
-    let obstacleSize = CGSize(width: 64, height: 64)
-    var obstacleMinGap: CGFloat {
-        return GameplayConf.Player.playerSize.height*2 + obstacleSize.height*2 }
+    let tileDim = 32
+    var blockHeight: Int {
+        return Int((UIProp.displaySize.height - 32)/CGFloat(tileDim)) }
+//    var partPadding: Int {
+//        return (blockHeight / 20) }
+    var partPadding = 1
+    var partSizeMinThres: Int {
+        return (blockHeight / 5) }
+    var partSizeMaxThres: Int {
+        return (blockHeight / 4) }
+    let obstacleWidth = 3
+    let obstacleHeight = 3
+//    var obstacleSize: CGSize {
+//        return CGSize(width: 4 * tileSize, height: 4 * tileSize) }
+    var obstacleMinGap: Int {
+        return (Int(GameplayConf.Player.playerSize.height) * 2 / tileDim) + obstacleHeight }
+//    var obstacleMinGap: Int {
+//        return Int(GameplayConf.Player.playerSize.height*2 + obstacleSize.height*2) }
     
     override init() {
         super.init()
+//        print("block height: \(blockHeight)")
+//        print("part padding: \(partPadding)")
+//        print("part min thres: \(partSizeMinThres)")
+//        print("part max thres: \(partSizeMaxThres)")
         arrangeObstacles()
     }
     
@@ -67,11 +81,11 @@ class ObstacleBlock: SKNode {
         // remove all previous children before adding new obstacle
         removeAllChildren()
         // split obstacle block into parts
-        var totalPartsLen: CGFloat = partPadding
-        var partsRanges: [Range<CGFloat>] = []
+        var totalPartsLen = partPadding
+        var partsRanges: [Range<Int>] = []
         
         while totalPartsLen < (blockHeight-partPadding) {
-            let randomPartSize = CGFloat.random(in: partSizeMinThres ... partSizeMaxThres)
+            let randomPartSize = Int.random(in: partSizeMinThres ... partSizeMaxThres)
             if (blockHeight-partPadding) - totalPartsLen <= partSizeMinThres {
                 let prevPartRange = partsRanges.popLast()
                 if let prevPartLowerBound = prevPartRange?.lowerBound {
@@ -90,26 +104,82 @@ class ObstacleBlock: SKNode {
         }
         
         // add obstaclee to each part
-        var prevObstaclePos: CGFloat = .zero
+        var prevObstaclePos = 0
+//        print("count: \(partsRanges.count)")
+//        print("ranges: \(partsRanges)")
+//        print("block height: \(blockHeight)")
+//        print("min thres: \(partSizeMinThres), max thres: \(partSizeMaxThres)")
         for part in 0 ..< partsRanges.count {
-            let obstacleNode = SKSpriteNode(color: .brown, size: .zero)
-            let randomPosition = CGFloat.random(in: partsRanges[part])
+            var obstacleParts = [SKNode]()
+//            var obstacleTiles = [SKSpriteNode]()
+//            let obstacleNode = SKSpriteNode(color: .brown, size: .zero)
+            let randomPosition = Int.random(in: partsRanges[part])
+//            print("random position: \(randomPosition)")
             if part == 0 {
-                obstacleNode.size = CGSize(width: obstacleSize.width, height: randomPosition + obstacleSize.height/2)
-                obstacleNode.position = CGPoint(x: 0, y: (randomPosition + obstacleSize.height/2)/2)
+//                for i in 0 ..< obstacleWidth {
+//                    for j in 0 ..< randomPosition {
+//                        let obstacleTile = SKSpriteNode(color: .brown, size: CGSize(width: tileDim, height: tileDim))
+//                        obstacleTile.anchorPoint = .zero
+//                        obstacleTile.position = CGPoint(x: i * tileDim, y: j * tileDim)
+//                        obstacleTiles.append(obstacleTile)
+//                    }
+//                }
+                let obstacleTiles = ObstacleTiles(obstacleWidth: obstacleWidth, obstacleHeight: randomPosition, tileSize: CGSize(width: tileDim, height: tileDim))
+                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeComponent.self)?.node {
+                    obstacleParts.append(obstacleTilesNode)
+                }
                 prevObstaclePos = randomPosition
+//                obstacleNode.size = CGSize(width: obstacleSize.width, height: CGFloat(tileSize * randomPosition) + obstacleSize.height/2)
+//                obstacleNode.position = CGPoint(x: 0, y: (CGFloat(tileSize * randomPosition) + obstacleSize.height/2)/2)
+//                prevObstaclePos = tileSize * randomPosition
             } else if part == (partsRanges.count - 1) {
-                let clampedPos = max(randomPosition, (prevObstaclePos+obstacleMinGap))
-                obstacleNode.size = CGSize(width: obstacleSize.width, height: blockHeight - clampedPos + obstacleSize.height/2)
-                obstacleNode.position = CGPoint(x: 0, y: (blockHeight+(clampedPos - obstacleSize.height/2))/2)
+                let clampedPos = max( randomPosition, (prevObstaclePos+obstacleMinGap))
+//                for i in 0 ..< obstacleWidth {
+//                    for j in 0 ..< (blockHeight - clampedPos) {
+//                        let obstacleTile = SKSpriteNode(color: .brown, size: CGSize(width: tileDim, height: tileDim))
+//                        obstacleTile.anchorPoint = .zero
+//                        obstacleTile.position = CGPoint(x: i * tileDim, y: (j + clampedPos) * tileDim)
+//                        obstacleTiles.append(obstacleTile)
+//                    }
+//                }
+                let obstacleTiles = ObstacleTiles(obstacleWidth: obstacleWidth, obstacleHeight: (blockHeight - clampedPos), tileSize: CGSize(width: tileDim, height: tileDim))
+                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeComponent.self)?.node {
+                    obstacleTilesNode.position.y = CGFloat(clampedPos * tileDim)
+                    obstacleParts.append(obstacleTilesNode)
+                }
                 prevObstaclePos = clampedPos
+//                let clampedPos = max((tileSize * randomPosition), (prevObstaclePos+obstacleMinGap))
+//                obstacleNode.size = CGSize(width: obstacleSize.width, height: CGFloat(tileSize * blockHeight - clampedPos) + obstacleSize.height/2)
+//                obstacleNode.position = CGPoint(x: 0, y: (CGFloat(tileSize * blockHeight)+(CGFloat(clampedPos) - obstacleSize.height/2))/2)
+//                prevObstaclePos = clampedPos
             } else {
-                let clampedPos = max(randomPosition, (prevObstaclePos+obstacleMinGap))
-                obstacleNode.size = obstacleSize
-                obstacleNode.position = CGPoint(x: 0, y: clampedPos)
+                let clampedPos = max( randomPosition, (prevObstaclePos+obstacleMinGap))
+//                for i in 0 ..< obstacleWidth {
+//                    for j in 0 ..< obstacleHeight {
+//                        let obstacleTile = SKSpriteNode(color: .brown, size: CGSize(width: tileDim, height: tileDim))
+//                        obstacleTile.anchorPoint = .zero
+//                        obstacleTile.position = CGPoint(x: i * tileDim, y: (j + clampedPos) * tileDim)
+//                        obstacleTiles.append(obstacleTile)
+//                    }
+//                }
+                let obstacleTiles = ObstacleTiles(obstacleWidth: obstacleWidth, obstacleHeight: obstacleHeight, tileSize: CGSize(width: tileDim, height: tileDim))
+                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeComponent.self)?.node {
+                    obstacleTilesNode.position.y = CGFloat(clampedPos * tileDim)
+                    obstacleParts.append(obstacleTilesNode)
+                }
                 prevObstaclePos = clampedPos
+//                let clampedPos = max((tileSize * randomPosition), (prevObstaclePos+obstacleMinGap))
+//                obstacleNode.size = obstacleSize
+//                obstacleNode.position = CGPoint(x: 0, y: clampedPos)
+//                prevObstaclePos = clampedPos
             }
-            addChild(obstacleNode)
+//            addChild(obstacleNode)
+            addChildren(obstacleParts)
+//            for obstacleTile in obstacleTiles {
+//                obstacleTile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: tileDim, height: tileDim), center: CGPoint(x: tileDim/2, y: tileDim/2))
+//                obstacleTile.physicsBody?.affectedByGravity = false
+//                obstacleTile.physicsBody?.collisionBitMask = .zero
+//            }
             
         }
     }
