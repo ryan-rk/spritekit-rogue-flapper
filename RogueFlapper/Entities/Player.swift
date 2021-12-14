@@ -8,29 +8,26 @@
 import SpriteKit
 import GameplayKit
 
-class Player: GKEntity {
+class Player: GameEntity {
+    
+    var speed: CGFloat = 200
     
     let agent: GKAgent2D
     
-    
 	// MARK: Initializer
-	override init() {
+    init(name: String = "Player") {
         agent = GKAgent2D()
-        super.init()
+        super.init(name: name, renderLayer: .interactable)
         
-        let nodeComponent = NodeComponent(nodeName: "PlayerNode", renderLayer: .interactable)
-        addComponent(nodeComponent)
-        agent.delegate = nodeComponent.node
+        agent.delegate = nodeRenderer.node
         
-//        let renderComponent = RenderComponent(spriteNode: SKSpriteNode(color: .cyan, size: GameplayConf.Player.playerSize))
-        let renderComponent = SpriteRenderer(spriteNode: SKSpriteNode(imageNamed: "chick-flap1"), size: GameplayConf.Player.playerSize)
-        addComponent(renderComponent)
+        let spriteRenderer = SpriteRenderer(spriteNode: SKSpriteNode(imageNamed: "chick-flap1"), size: GameplayConf.Player.playerSize)
+        addComponent(spriteRenderer)
         
-//        let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(rectangleOf: GameplayConf.Player.playerSize+CGSize(width: 16, height: 16)), colliderType: .Player)
-        let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(circleOfRadius: GameplayConf.Player.playerPbRadius), colliderType: .Player)
-        addComponent(physicsComponent)
-        physicsComponent.physicsBody.allowsRotation = false
-        physicsComponent.setCollisionsInteractions(collisionObjects: [.Boundary])
+        let physicsBody = PhysicsBody(body: SKPhysicsBody(circleOfRadius: GameplayConf.Player.playerPbRadius), colliderType: .Player)
+        addComponent(physicsBody)
+        physicsBody.body.allowsRotation = false
+        physicsBody.setCollisionsInteractions(collisionObjects: [.Boundary])
         
         let gameInput = GameInput()
         addComponent(gameInput)
@@ -38,8 +35,8 @@ class Player: GKEntity {
         let playerFlap = PlayerFlap()
         addComponent(playerFlap)
         
-        let bulletShooter = BulletShooter()
-        addComponent(bulletShooter)
+//        let bulletShooter = BulletShooter()
+//        addComponent(bulletShooter)
         
         let playerMovement = PlayerMovement()
         addComponent(playerMovement)

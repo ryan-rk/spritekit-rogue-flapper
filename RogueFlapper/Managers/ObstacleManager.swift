@@ -8,31 +8,35 @@
 import SpriteKit
 import GameplayKit
 
-class ObstacleManager: GKEntity {
+class ObstacleManager: GameEntity {
     
     var scrollBlocks: [SKNode] = []
+    var speedController: WorldSpeedController?
     
-    override init() {
-        super.init()
-        
-        let nodeComponent = NodeComponent(nodeName: "ObstacleManagerNode", renderLayer: .interactable)
-        addComponent(nodeComponent)
+    init(name: String = "Obstacle Manager") {
+        super.init(name: name, renderLayer: .interactable)
         
         let obstacleBlock1 = ObstacleBlock()
         obstacleBlock1.position += CGPoint(x: 0, y: 16)
         scrollBlocks.append(obstacleBlock1)
-        nodeComponent.node.addChild(obstacleBlock1)
+        addChildNode(obstacleBlock1)
+//        nodeComponent.node.addChild(obstacleBlock1)
         let obstacleBlock2 = ObstacleBlock()
         obstacleBlock2.position += CGPoint(x: 0, y: 16)
         scrollBlocks.append(obstacleBlock2)
-        nodeComponent.node.addChild(obstacleBlock2)
+        addChildNode(obstacleBlock2)
+//        nodeComponent.node.addChild(obstacleBlock2)
         
-        let infScroll = InfScroll(scrollBlocks: scrollBlocks, blocksGap: UIProp.displaySize.width * 1.2, speed: 100)
+        let infScroll = InfScroll(scrollBlocks: scrollBlocks, initialPosOffset: UIProp.displaySize.width * 1.2, blocksGap: UIProp.displaySize.width * 1.2)
         addComponent(infScroll)
         infScroll.repositionCallback = {(block: SKNode) in
             if let obstacleBlock = block as? ObstacleBlock {
                 obstacleBlock.arrangeObstacles()
             }
+        }
+//        speedController = WorldSpeedController()
+        if let speedController = speedController {
+            addComponent(speedController)
         }
     }
     
@@ -40,29 +44,29 @@ class ObstacleManager: GKEntity {
         super.init(coder: aDecoder)
     }
     
+    override func start() {
+        if let speedController = speedController {
+            speedController.attachController()
+        }
+    }
+    
 }
 
 
 class ObstacleBlock: SKNode {
     
-    let tileDim = 32
+    let tileDim = 20
     var blockHeight: Int {
         return Int((UIProp.displaySize.height - 32)/CGFloat(tileDim)) }
-//    var partPadding: Int {
-//        return (blockHeight / 20) }
-    var partPadding = 1
+    var partPadding = 3
     var partSizeMinThres: Int {
         return (blockHeight / 5) }
     var partSizeMaxThres: Int {
         return (blockHeight / 4) }
     let obstacleWidth = 3
     let obstacleHeight = 3
-//    var obstacleSize: CGSize {
-//        return CGSize(width: 4 * tileSize, height: 4 * tileSize) }
     var obstacleMinGap: Int {
         return (Int(GameplayConf.Player.playerSize.height) * 2 / tileDim) + obstacleHeight }
-//    var obstacleMinGap: Int {
-//        return Int(GameplayConf.Player.playerSize.height*2 + obstacleSize.height*2) }
     
     override init() {
         super.init()
@@ -125,7 +129,7 @@ class ObstacleBlock: SKNode {
 //                    }
 //                }
                 let obstacleTiles = ObstacleTiles(obstacleWidth: obstacleWidth, obstacleHeight: randomPosition, tileSize: CGSize(width: tileDim, height: tileDim))
-                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeComponent.self)?.node {
+                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeRenderer.self)?.node {
                     obstacleParts.append(obstacleTilesNode)
                 }
                 prevObstaclePos = randomPosition
@@ -143,7 +147,7 @@ class ObstacleBlock: SKNode {
 //                    }
 //                }
                 let obstacleTiles = ObstacleTiles(obstacleWidth: obstacleWidth, obstacleHeight: (blockHeight - clampedPos), tileSize: CGSize(width: tileDim, height: tileDim))
-                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeComponent.self)?.node {
+                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeRenderer.self)?.node {
                     obstacleTilesNode.position.y = CGFloat(clampedPos * tileDim)
                     obstacleParts.append(obstacleTilesNode)
                 }
@@ -163,7 +167,7 @@ class ObstacleBlock: SKNode {
 //                    }
 //                }
                 let obstacleTiles = ObstacleTiles(obstacleWidth: obstacleWidth, obstacleHeight: obstacleHeight, tileSize: CGSize(width: tileDim, height: tileDim))
-                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeComponent.self)?.node {
+                if let obstacleTilesNode = obstacleTiles.component(ofType: NodeRenderer.self)?.node {
                     obstacleTilesNode.position.y = CGFloat(clampedPos * tileDim)
                     obstacleParts.append(obstacleTilesNode)
                 }

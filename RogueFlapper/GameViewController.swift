@@ -13,15 +13,21 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(UIProp.displaySize)
         
-        
-        let sceneNode = GameScene(size: UIProp.displaySize)
+//        let sceneNode = GameScene(size: UIProp.displaySize)
+//        let sceneNode = TestScene(size: UIProp.displaySize)
+//        let sceneNode = StartMenuScene(size: UIProp.displaySize)
         // Set the scale mode to scale to fit the window
-        sceneNode.scaleMode = .aspectFill
+//        sceneNode.scaleMode = .aspectFit
         
         // Present the scene
         if let view = self.view as! SKView? {
-            view.presentScene(sceneNode)
+            SceneManager.view = view
+            SceneManager.sceneSize = UIProp.displaySize
+            SceneManager.loadStartMenu()
+            
+//            view.presentScene(sceneNode)
             
             view.showsFPS = true
             view.showsNodeCount = true

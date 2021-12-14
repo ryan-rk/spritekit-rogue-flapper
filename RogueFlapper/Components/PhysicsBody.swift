@@ -8,28 +8,28 @@
 import SpriteKit
 import GameplayKit
 
-class PhysicsComponent: GKComponent {
+class PhysicsBody: GKComponent {
 
     // MARK: Properties
     
-    var physicsBody: SKPhysicsBody
+    var body: SKPhysicsBody
     var colliderType: ColliderType
     
     // MARK: Initializers
     
-    init(physicsBody: SKPhysicsBody, colliderType: ColliderType) {
-        self.physicsBody = physicsBody
+    init(body: SKPhysicsBody, colliderType: ColliderType) {
+        self.body = body
         self.colliderType = colliderType
         super.init()
-        physicsBody.categoryBitMask = colliderType.categoryMask
-        physicsBody.collisionBitMask = colliderType.collisionMask
-        physicsBody.contactTestBitMask = colliderType.contactMask
+        self.body.categoryBitMask = colliderType.categoryMask
+        self.body.collisionBitMask = colliderType.collisionMask
+        self.body.contactTestBitMask = colliderType.contactMask
         
     }
     
     override func didAddToEntity() {
         // attach physics body to entity node component's node
-        entityNode?.physicsBody = physicsBody
+        entityNode?.physicsBody = body
     }
     
     override func willRemoveFromEntity() {
@@ -38,9 +38,9 @@ class PhysicsComponent: GKComponent {
     }
     
     func setBodyBitMasks() {
-        physicsBody.categoryBitMask = colliderType.categoryMask
-        physicsBody.collisionBitMask = colliderType.collisionMask
-        physicsBody.contactTestBitMask = colliderType.contactMask
+        body.categoryBitMask = colliderType.categoryMask
+        body.collisionBitMask = colliderType.collisionMask
+        body.contactTestBitMask = colliderType.contactMask
     }
     
     func setPhysicsInteractions(_ collisionSubject: ColliderType? = nil, collisionObjects: [ColliderType], _ contactSubject: ColliderType? = nil, contactObjects: [ColliderType]) {

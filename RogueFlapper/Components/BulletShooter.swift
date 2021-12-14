@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class BulletShooter: GKComponent, GameInputHandler {
+class BulletShooter: GameComponent, GameInputHandler {
     var bulletSpeed: CGFloat = 600
     var bulletDirection: CGFloat = 270
     
@@ -23,7 +23,7 @@ class BulletShooter: GKComponent, GameInputHandler {
 
     func shootBullet() {
         let bullet = Bullet()
-        gameScene?.addEntity(entity: bullet)
+        entityGameScene?.addEntity(entity: bullet)
         if let entityNode = entityNode {
             let bulletStartPos = entityNode.position
             bullet.shoot(from: bulletStartPos, direction: CGVector(angle: deg2rad(bulletDirection)), withSpeed: bulletSpeed)

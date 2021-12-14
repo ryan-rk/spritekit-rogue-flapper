@@ -8,23 +8,25 @@
 import SpriteKit
 import GameplayKit
 
-class InfScroll: GKComponent {
+class InfScroll: GameComponent, SpeedControllable {
     
-    var scrollSpeed: CGFloat = 0
-    var bgTrailingPos: CGFloat = 0
+    var controlledSpeed: CGFloat
+    var speedScale: CGFloat
+    var scrollSpeed: CGFloat { return speedScale * controlledSpeed }
+    var blocksGap: CGFloat
+    var bgTrailingPos: CGFloat
     var scrollBlocks: [SKNode] = []
-    var blocksGap: CGFloat = .zero
     
     var repositionCallback = {(block: SKNode) in }
     
 	// MARK: Initializer
-    init(scrollBlocks: [SKNode], initialPosOffset: CGFloat = 0, blocksGap: CGFloat, speed: CGFloat) {
-        super.init()
-        
-        self.scrollBlocks = scrollBlocks
+    init(scrollBlocks: [SKNode], initialPosOffset: CGFloat = 0, blocksGap: CGFloat = 0, speed: CGFloat = 0, speedScale: CGFloat = 1) {
         bgTrailingPos = initialPosOffset
+        self.controlledSpeed = speed
+        self.speedScale = speedScale
         self.blocksGap = blocksGap
-        scrollSpeed = speed
+        self.scrollBlocks = scrollBlocks
+        super.init()
         
         for block in scrollBlocks {
             positionBlockToTrailing(block: block)

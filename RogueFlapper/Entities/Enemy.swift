@@ -13,7 +13,7 @@ enum EnemyType: String {
     case spiderEnemy
     case mosquitoEnemy
     
-    func getEntity() -> GKEntity {
+    func getEntity() -> GameEntity {
         switch self {
         case .beeEnemy:
             return BeeEnemy()
@@ -26,25 +26,20 @@ enum EnemyType: String {
     
 }
 
-class Enemy: GKEntity {
+class Enemy: GameEntity {
     
-    let nodeComponent = NodeComponent(nodeName: "EnemyNode", renderLayer: .interactable)
-    let renderComponent = SpriteRenderer(spriteNode: SKSpriteNode(color: .gray, size: GameplayConf.Enemy.enemySize))
-//    var physicsComponent: PhysicsComponent {
-//        return PhysicsComponent(physicsBody: SKPhysicsBody(rectangleOf: renderComponent.spriteNode.size+CGSize(width: 8, height: 8)), colliderType: .Enemy)
-//    }
+    let spriteRenderer = SpriteRenderer(spriteNode: SKSpriteNode(color: .gray, size: GameplayConf.Enemy.enemySize))
     let enemyMovement = EnemyMovement()
 
 	// MARK: Initializer
-    init(nodeSize: CGSize) {
-        super.init()
+    init(nodeSize: CGSize, name: String = "Enemy") {
+        super.init(name: name, renderLayer: .interactable)
         
-        addComponent(nodeComponent)
-        addComponent(renderComponent)
-        let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(rectangleOf: renderComponent.spriteNode.size+CGSize(width: 8, height: 8)), colliderType: .Enemy)
-        addComponent(physicsComponent)
-        physicsComponent.physicsBody.affectedByGravity = false
-        physicsComponent.setContactsInteractions(contactObjects: [.Player, .Projectile])
+        addComponent(spriteRenderer)
+        let physicsBody = PhysicsBody(body: SKPhysicsBody(rectangleOf: spriteRenderer.spriteNode.size+CGSize(width: 8, height: 8)), colliderType: .Enemy)
+        addComponent(physicsBody)
+        physicsBody.body.affectedByGravity = false
+        physicsBody.setContactsInteractions(contactObjects: [.Player, .Projectile])
         
         addComponent(enemyMovement)
         
@@ -55,9 +50,7 @@ class Enemy: GKEntity {
     }
     
     func removeEnemy() {
-        if let gameScene = component(ofType: NodeComponent.self)?.node.scene as? GameScene {
-            gameScene.removeEntity(entity: self)
-        }
+        gameScene?.removeEntity(entity: self)
     }
     
     deinit {
@@ -86,7 +79,7 @@ extension Enemy: ContactNotifiableType {
 class ChasingComponent: GKComponent {
     
     func startChasing(targetEntity: GKEntity, speed: Double) {
-        if let entityPosition = targetEntity.component(ofType: NodeComponent.self)?.node.position {
+        if let entityPosition = targetEntity.component(ofType: NodeRenderer.self)?.node.position {
             let chasingAction = SKAction.move(to: entityPosition, duration: speed)
             entityNode?.run(chasingAction)
         }
@@ -100,14 +93,11 @@ class ChasingComponent: GKComponent {
 class BeeEnemy: Enemy {
     
     init() {
-        super.init(nodeSize: GameplayConf.Enemy.beeEnemySize)
-        nodeComponent.node.name = EnemyType.beeEnemy.rawValue + "EnemyNode"
-        renderComponent.spriteNode.color = .red
+        super.init(nodeSize: GameplayConf.Enemy.beeEnemySize, name: "Bee Enemy")
+        spriteRenderer.spriteNode.color = .red
         
         enemyMovement.moveby(pos: CGVector(dx: 0, dy: UIProp.displaySize.height-300), speed: 100) { [unowned self] in
-            if let gameScene = self.nodeComponent.node.scene as? GameScene {
-                gameScene.removeEntity(entity: self)
-            }
+            gameScene?.removeEntity(entity: self)
         }
     }
     
@@ -121,9 +111,8 @@ class BeeEnemy: Enemy {
 class SpiderEnemy: Enemy {
     
     init() {
-        super.init(nodeSize: GameplayConf.Enemy.spiderEnemySize)
-        nodeComponent.node.name = EnemyType.spiderEnemy.rawValue + "EnemyNode"
-        renderComponent.spriteNode.color = .green
+        super.init(nodeSize: GameplayConf.Enemy.spiderEnemySize, name: "Spider Enemy")
+        spriteRenderer.spriteNode.color = .green
     }
     
     required init?(coder: NSCoder) {
@@ -138,9 +127,8 @@ class MosquitoEnemy: Enemy {
     let agentComponent = AgentComponent()
     
     init() {
-        super.init(nodeSize: GameplayConf.Enemy.mosquitoEnemySize)
-        nodeComponent.node.name = EnemyType.mosquitoEnemy.rawValue + "EnemyNode"
-        renderComponent.spriteNode.color = .blue
+        super.init(nodeSize: GameplayConf.Enemy.mosquitoEnemySize, name: "Mosquito Enemy")
+        spriteRenderer.spriteNode.color = .blue
         
         addComponent(agentComponent)
     }
@@ -149,12 +137,12 @@ class MosquitoEnemy: Enemy {
         super.init(coder: coder)
     }
     
-    override func didAddToScene() {
+    override func start() {
         var interceptGoal: GKGoal {
-            guard let gameScene = nodeComponent.node.scene as? GameScene else {
+            guard let levelScene = gameScene as? LevelScene else {
                 return GKGoal(toWander: 1.0)
             }
-            return GKGoal(toInterceptAgent: gameScene.player.agent, maxPredictionTime: 1.0)
+            return GKGoal(toInterceptAgent: levelScene.player.agent, maxPredictionTime: 1.0)
         }
         agentComponent.agentGoals.append(interceptGoal)
         agentComponent.goalsWeights = [0.1,100]

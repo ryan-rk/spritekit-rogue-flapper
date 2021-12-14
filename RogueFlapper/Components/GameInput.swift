@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameInput: GKComponent {
+class GameInput: GameComponent {
     
     var quickTapThresRadius: Float = 5
     var quickTapThresInterval: Double = 0.25

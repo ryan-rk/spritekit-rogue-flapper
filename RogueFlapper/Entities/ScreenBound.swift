@@ -8,17 +8,13 @@
 import SpriteKit
 import GameplayKit
 
-class ScreenBound: GKEntity {
+class ScreenBound: GameEntity {
     
-	// MARK:
-	override init() {
-        super.init()
+    init(name: String = "Screen Bound") {
+        super.init(name: name, renderLayer: .world)
         
-        let nodeComponent = NodeComponent(nodeName: "ScreenBoundNode")
-        addComponent(nodeComponent)
-        
-        let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(edgeLoopFrom: CGRect(origin: CGPoint(x: 10, y: 10), size: UIProp.displaySize-CGSize(width: 20, height: 20))), colliderType: .Boundary)
-        addComponent(physicsComponent)
+        let physicsBody = PhysicsBody(body: SKPhysicsBody(edgeLoopFrom: CGRect(origin: CGPoint(x: 10, y: 10), size: UIProp.displaySize-CGSize(width: 20, height: 20))), colliderType: .Boundary)
+        addComponent(physicsBody)
     }
     
     required init?(coder: NSCoder) {

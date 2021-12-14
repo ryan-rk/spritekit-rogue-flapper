@@ -10,10 +10,13 @@ import GameplayKit
 
 class AgentComponent: GKAgent2D {
     
-    var agentBehavior: GKBehavior
+    var agentGoals = [GKGoal(toWander: 1.0)]
+    var goalsWeights: [NSNumber] = [100]
+    var agentBehavior: GKBehavior {
+        return GKBehavior(goals: agentGoals, andWeights: goalsWeights)
+    }
 
-    init(agentBehavior: GKBehavior) {
-        self.agentBehavior = agentBehavior
+    override init() {
         super.init()
     }
     
@@ -22,15 +25,17 @@ class AgentComponent: GKAgent2D {
     }
     
     override func didAddToEntity() {
-        self.behavior = agentBehavior
-        self.mass = 1
-        self.maxAcceleration = 50
-        self.maxSpeed = 50
-        self.radius = 20
-        self.speed = 40
-        
-        self.delegate = entityNode
-        
+        behavior = agentBehavior
+        mass = 1
+        maxAcceleration = 80
+        maxSpeed = 80
+        radius = 20
+        speed = 50
+        delegate = entityNode
+    }
+    
+    func updateBehavior() {
+        behavior = agentBehavior
     }
 
 }

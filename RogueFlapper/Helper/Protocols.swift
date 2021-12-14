@@ -25,3 +25,7 @@ extension GameInputHandler {
     func touchMoved(amountFromPrev: CGVector, touches: Set<UITouch>, currentView: SKView) {}
     func touchEnded(touches: Set<UITouch>, currentView: SKView) {}
 }
+
+protocol SpeedControllable {
+    var controlledSpeed: CGFloat { get set }
+}

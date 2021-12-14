@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class PlayerFlap: GKComponent, GameInputHandler {
+class PlayerFlap: GameComponent, GameInputHandler {
     
     var playerFlapAmount: CGFloat = 30
     

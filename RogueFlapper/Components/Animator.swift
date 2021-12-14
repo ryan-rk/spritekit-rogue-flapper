@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class Animator: GKComponent {
+class Animator: GameComponent {
     
     var textures = [SKTexture]()
 

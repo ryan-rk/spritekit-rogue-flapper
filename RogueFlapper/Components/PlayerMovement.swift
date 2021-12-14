@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class PlayerMovement: GKComponent, GameInputHandler {
+class PlayerMovement: GameComponent, GameInputHandler {
     
     var movementSens: CGFloat = 60
     

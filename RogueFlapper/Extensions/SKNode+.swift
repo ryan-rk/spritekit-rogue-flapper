@@ -22,7 +22,12 @@ extension SKNode {
     }
     
     func didAddToParent(parent: SKNode) {
-        
+    }
+    
+    
+    // called after all nodes added to node tree
+    @objc func start() {
+        entity?.start()
     }
     
 }

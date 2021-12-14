@@ -1,5 +1,5 @@
 //
-//  NodeComponent.swift
+//  NodeRenderer.swift
 //  RogueFlapper
 //
 //  Created by Ryan RK on 23/10/2021.
@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class NodeComponent: GKComponent {
+class NodeRenderer: GameComponent {
 
     // MARK: Properties
     
@@ -25,7 +25,7 @@ class NodeComponent: GKComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: GKComponent
+    // MARK: GKComponent methods
     
     override func didAddToEntity() {
         node.entity = entity

@@ -36,54 +36,37 @@ enum WorldLayer: CGFloat {
 
 class GameScene: SKScene {
     
+    // MARK: - Variables and Constants
+    
+    var entities = Set<GameEntity>()
     var worldLayerNodes = [WorldLayer: SKNode]()
-    var entities = Set<GKEntity>()
+    lazy var componentSystems = [GKComponentSystem]()
     
-    let player = Player()
-    let screenBound = ScreenBound()
-//    let beeEnemyManager = EnemyManager(enemyType: .beeEnemy)
-//    let mosquitoEnemyManager = EnemyManager(enemyType: .mosquitoEnemy)
-//    let spiderEnemyManager = EnemyManager(enemyType: .spiderEnemy)
-    let bgManager = BgManager()
-    let obstacleManager = ObstacleManager()
+    private var lastUpdateTime: TimeInterval = 0
     
-    lazy var componentSystems: [GKComponentSystem] = {
-        let infScrollCompSys = GKComponentSystem(componentClass: InfScroll.self)
-        let gameInputCompSys = GKComponentSystem(componentClass: GameInput.self)
-        let enemySpawnerCompSys = GKComponentSystem(componentClass: EnemySpawnerComponent.self)
-        let agentCompSys = GKComponentSystem(componentClass: AgentComponent.self)
-        return [infScrollCompSys, gameInputCompSys, enemySpawnerCompSys, agentCompSys]
-    }()
+    override init(size: CGSize) {
+        super.init(size: size)
+        loadWorldLayers()
+    }
     
-    
-    private var lastUpdateTime : TimeInterval = 0
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
     
     override func sceneDidLoad() {
-
         self.lastUpdateTime = 0
-        
     }
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
-        physicsWorld.gravity = CGVector(dx: 0, dy: -8)
-//        physicsWorld.gravity = .zero
-        
-        loadWorldLayers()
-        bgManager.addEntities(to: self)
-        addEntity(entity: screenBound)
-        spawnPlayer(location: UIProp.displayCenter)
-        addEntity(entity: obstacleManager)
-//        beeEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = 100
-//        addEntity(entity: beeEnemyManager)
-//        mosquitoEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = UIProp.displaySize.height - 100
-//        addEntity(entity: mosquitoEnemyManager)
-//        spiderEnemyManager.component(ofType: NodeComponent.self)?.node.position.y = UIProp.displaySize.height - 100
-//        addEntity(entity: spiderEnemyManager)
-        attachGameInputNode()
-        
+        startAllNodes()
     }
     
+    func startAllNodes() {
+        enumerateChildNodes(withName: "//*") { node, _ in
+            node.start()
+        }
+    }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
@@ -109,13 +92,7 @@ class GameScene: SKScene {
         self.lastUpdateTime = currentTime
     }
     
-    // MARK: - Load level
-    
-    func spawnPlayer(location: CGPoint) {
-        let playerNode = player.component(ofType: NodeComponent.self)?.node
-        playerNode?.position = location
-        addEntity(entity: player)
-    }
+    // MARK: - Functions to manage world layers
     
     func loadWorldLayers() {
         for worldLayer in WorldLayer.allLayers {
@@ -127,46 +104,34 @@ class GameScene: SKScene {
         }
     }
     
-    func attachGameInputNode() {
-        let gameInputNode = GameInputNode(controlAreaSize: UIProp.displaySize - CGSize(width: 60, height: 60), controlAreaLocation: UIProp.displayCenter)
-        if let gameInputComponentSystem = self.componentSystems.first(where: { componentSystem in
-            componentSystem.componentClass == GameInput.self
-        }){
-            gameInputNode.gameInputCompSys = gameInputComponentSystem
-        }
-        addNode(node: gameInputNode, toWorldLayer: .gameInput)
-    }
-    
-    
-    // MARK: - functions to manage entities and nodes
+    // MARK: - Functions to manage entities and nodes
     
     func addNode(node: SKNode, toWorldLayer worldLayer: WorldLayer) {
         let worldLayerNode = worldLayerNodes[worldLayer]!
         worldLayerNode.addChild(node)
     }
     
-    func addEntity(entity: GKEntity) {
+    func addEntity(entity: GameEntity) {
         entities.insert(entity)
         
         for componentSystem in self.componentSystems {
             componentSystem.addComponent(foundIn: entity)
         }
         
-        if let entityNodeComponent = entity.component(ofType: NodeComponent.self) {
-            addNode(node: entityNodeComponent.node, toWorldLayer: entityNodeComponent.renderLayer)
-            entity.didAddToScene()
+        if let entityNode = entity.component(ofType: NodeRenderer.self) {
+            addNode(node: entityNode.node, toWorldLayer: entityNode.renderLayer)
         }
         
     }
     
-    func removeEntity(entity: GKEntity) {
+    func removeEntity(entity: GameEntity) {
         entities.remove(entity)
         
         for componentSystem in self.componentSystems {
             componentSystem.removeComponent(foundIn: entity)
         }
         
-        if let entityNode = entity.component(ofType: NodeComponent.self)?.node {
+        if let entityNode = entity.component(ofType: NodeRenderer.self)?.node {
             entityNode.removeFromParent()
         }
     }

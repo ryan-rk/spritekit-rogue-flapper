@@ -8,25 +8,22 @@
 import SpriteKit
 import GameplayKit
 
-class Bullet: GKEntity {
+class Bullet: GameEntity {
     
     let destroyTimer: Double = 0.2
     
-    let nodeComponent = NodeComponent(nodeName: "BulletNode", renderLayer: .interactable)
-    let physicsComponent = PhysicsComponent(physicsBody: SKPhysicsBody(rectangleOf: GameplayConf.Bullet.bulletSize), colliderType: .Projectile)
+    let physicsBody = PhysicsBody(body: SKPhysicsBody(rectangleOf: GameplayConf.Bullet.bulletSize), colliderType: .Projectile)
     
 	// MARK: Initializer
-	override init() {
-        super.init()
+    init(name: String = "Bullet") {
+        super.init(name: name, renderLayer: .interactable)
         
-        addComponent(nodeComponent)
+        let spriteRenderer = SpriteRenderer(spriteNode: SKSpriteNode(color: .white, size: GameplayConf.Bullet.bulletSize))
+        addComponent(spriteRenderer)
         
-        let renderComponent = SpriteRenderer(spriteNode: SKSpriteNode(color: .white, size: GameplayConf.Bullet.bulletSize))
-        addComponent(renderComponent)
-        
-        addComponent(physicsComponent)
-        physicsComponent.physicsBody.affectedByGravity = false
-        physicsComponent.setContactsInteractions(contactObjects: [.Boundary])
+        addComponent(physicsBody)
+        physicsBody.body.affectedByGravity = false
+        physicsBody.setContactsInteractions(contactObjects: [.Boundary])
     }
     
     required init?(coder: NSCoder) {
@@ -36,14 +33,15 @@ class Bullet: GKEntity {
 
 extension Bullet {
     func destroy() {
-        if let gameScene = self.component(ofType: NodeComponent.self)?.node.scene as? GameScene {
-            gameScene.removeEntity(entity: self)
-        }
+        gameScene?.removeEntity(entity: self)
+//        if let gameScene = self.component(ofType: NodeRenderer.self)?.node.scene as? GameScene {
+//            gameScene.removeEntity(entity: self)
+//        }
     }
     
     func shoot(from pos: CGPoint, direction: CGVector, withSpeed speed: CGFloat) {
-        nodeComponent.node.position = pos
-        physicsComponent.physicsBody.velocity = direction * speed
+        nodeRenderer.node.position = pos
+        physicsBody.body.velocity = direction * speed
         destroyCountdown()
     }
     
@@ -51,7 +49,7 @@ extension Bullet {
         let destroyAction = SKAction.run { [weak self] in self?.destroy() }
         let destroyCountdownAction = SKAction.sequence([SKAction.wait(forDuration: destroyTimer),
                                                        destroyAction])
-        nodeComponent.node.run(destroyCountdownAction)
+        nodeRenderer.node.run(destroyCountdownAction)
     }
 }
 

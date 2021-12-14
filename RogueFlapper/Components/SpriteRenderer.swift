@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class SpriteRenderer: GKComponent {
+class SpriteRenderer: GameComponent {
     
     var spriteNode: SKSpriteNode
     

@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class EnemyMovement: GKComponent {
+class EnemyMovement: GameComponent {
 
     func moveby(pos: CGVector, speed: Float, completionCallback: @escaping ()->()) {
         let moveLength = hypotf(Float(pos.dx), Float(pos.dy))
