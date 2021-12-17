@@ -15,7 +15,7 @@ class Background: GameEntity {
     // settings for infinite scrolling
     var isInfScroll = false
     var scrollBlocks: [SKNode] = []
-    var baseScrollSpeed: CGFloat = 100
+    var baseScrollSpeed: CGFloat = 150
     var speedController: WorldSpeedController?
 
 	// MARK: Initializer
@@ -34,7 +34,7 @@ class Background: GameEntity {
         }
 
         if isInfScroll {
-            let infScroll = InfScroll(scrollBlocks: self.scrollBlocks, speed: baseScrollSpeed, speedScale: zposOffset)
+            let infScroll = InfiniteScroller(scrollBlocks: self.scrollBlocks, speed: baseScrollSpeed, speedScale: zposOffset)
             addComponent(infScroll)
             speedController = WorldSpeedController()
             if let speedController = speedController {
@@ -51,16 +51,16 @@ class Background: GameEntity {
         if let speedController = speedController {
             speedController.attachController()
         }
-        if let levelScene = gameScene as? LevelScene {
-            for componentSystem in levelScene.componentSystems {
-                componentSystem.addComponent(foundIn: self)
-            }
-        }
-        if let levelScene = gameScene as? StartMenuScene {
-            for componentSystem in levelScene.componentSystems {
-                componentSystem.addComponent(foundIn: self)
-            }
-        }
+//        if let levelScene = gameScene as? LevelScene {
+//            for componentSystem in levelScene.componentSystems {
+//                componentSystem.addComponent(foundIn: self)
+//            }
+//        }
+//        if let levelScene = gameScene as? StartMenuScene {
+//            for componentSystem in levelScene.componentSystems {
+//                componentSystem.addComponent(foundIn: self)
+//            }
+//        }
     }
 
 }

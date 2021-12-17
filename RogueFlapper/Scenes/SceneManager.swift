@@ -14,7 +14,9 @@ class SceneManager {
     static var sceneScaleMode: SKSceneScaleMode = .aspectFill
     
     static func loadStartMenu() {
-        let scene = StartMenuScene(size: sceneSize)
+//        let scene = StartMenuScene(size: sceneSize)
+//        let scene = LevelScene(level: 1, size: sceneSize)
+        let scene = TestScene(size: sceneSize)
         view.presentScene(scene)
     }
     

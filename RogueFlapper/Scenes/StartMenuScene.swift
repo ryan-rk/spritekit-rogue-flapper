@@ -16,7 +16,7 @@ class StartMenuScene: GameScene {
     override init(size: CGSize) {
         super.init(size: size)
         
-        componentSystems = [GKComponentSystem(componentClass: InfScroll.self)]
+        componentSystems = [GKComponentSystem(componentClass: InfiniteScroller.self)]
         
         addEntity(entity: bgManager)
         addEntity(entity: canvas)

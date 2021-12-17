@@ -28,6 +28,17 @@ class PlayerFlap: GameComponent, GameInputHandler {
             if (timeFromStart < gic.quickTapThresInterval) && (distFromStart < gic.quickTapThresRadius) {
                 playerFlap()
             }
+            
+//            if let player = entity as? Player {
+//                player.speed -= 20
+////                entityNode?.removeAction(forKey: "Restore Action")
+//                let restoreTimer = SKAction.wait(forDuration: 1)
+//                let restoreAction = SKAction.sequence([restoreTimer, SKAction.run({
+//                    player.speed += 20
+//                })])
+//                entityNode?.run(restoreAction)
+//                print(player.speed)
+//            }
         }
     }
     

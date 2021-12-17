@@ -10,6 +10,22 @@ import GameplayKit
 
 extension SKNode {
     
+    var tags: [TagsLabel : String] {
+        get {
+            if let tags = self.userData?["tags"] as? [TagsLabel : String] {
+                return tags
+            } else {
+                return [TagsLabel : String] ()
+            }
+        }
+        set {
+            self.userData = self.userData ?? NSMutableDictionary()
+            if let userData = self.userData {
+                userData["tags"] = newValue
+            }
+        }
+    }
+    
     func addChildren(_ nodes: [SKNode]) {
         for node in nodes {
             addChild(node)
@@ -27,7 +43,9 @@ extension SKNode {
     
     // called after all nodes added to node tree
     @objc func start() {
-        entity?.start()
+        if let gameEntity = entity as? GameEntity {
+            gameEntity.start()
+        }
     }
     
 }

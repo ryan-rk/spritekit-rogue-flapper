@@ -29,7 +29,7 @@ class LevelScene: GameScene {
         // Initialize component systems
         componentSystems = [
             GKComponentSystem(componentClass: WorldSpeedController.self),
-            GKComponentSystem(componentClass: InfScroll.self),
+            GKComponentSystem(componentClass: InfiniteScroller.self),
             GKComponentSystem(componentClass: GameInput.self),
             GKComponentSystem(componentClass: EnemySpawner.self),
             GKComponentSystem(componentClass: AgentComponent.self)

@@ -10,7 +10,7 @@ import GameplayKit
 
 class Player: GameEntity {
     
-    var speed: CGFloat = 200
+    var speed: CGFloat = 100
     
     let agent: GKAgent2D
     

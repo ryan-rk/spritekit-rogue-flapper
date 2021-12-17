@@ -1,5 +1,5 @@
 //
-//  InfScroll.swift
+//  InfiniteScroller.swift
 //  RogueFlapper
 //
 //  Created by Ryan RK on 30/10/2021.
@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class InfScroll: GameComponent, SpeedControllable {
+class InfiniteScroller: GameComponent, SpeedControllable {
     
     var controlledSpeed: CGFloat
     var speedScale: CGFloat

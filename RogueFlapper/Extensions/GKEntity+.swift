@@ -9,19 +9,19 @@ import GameplayKit
 
 extension GKEntity {
     
-    var gameScene: GameScene? {
-        if let nodeRenderer = component(ofType: NodeRenderer.self)?.node {
-            if let gameScene = nodeRenderer.scene as? GameScene {
-                return gameScene
-            } else {
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }
+//    var gameScene: GameScene? {
+//        if let nodeRenderer = component(ofType: NodeRenderer.self)?.node {
+//            if let gameScene = nodeRenderer.scene as? GameScene {
+//                return gameScene
+//            } else {
+//                return nil
+//            }
+//        } else {
+//            return nil
+//        }
+//    }
      
-    @objc func start() {
-    }
-    
+//    @objc func start() {
+//    }
+//
 }

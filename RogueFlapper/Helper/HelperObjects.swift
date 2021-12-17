@@ -30,3 +30,7 @@ enum Layout: String {
     case left
     case right
 }
+
+enum TagsLabel: String {
+    case clickableTag
+}

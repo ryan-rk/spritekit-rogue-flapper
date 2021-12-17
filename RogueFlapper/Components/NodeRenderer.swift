@@ -12,7 +12,7 @@ class NodeRenderer: GameComponent {
 
     // MARK: Properties
     
-    let node = SKNode()
+    let node = GameNode()
     var renderLayer = WorldLayer.world
     
     init(nodeName: String, renderLayer: WorldLayer = .world) {

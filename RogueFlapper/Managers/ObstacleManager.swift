@@ -11,30 +11,31 @@ import GameplayKit
 class ObstacleManager: GameEntity {
     
     var scrollBlocks: [SKNode] = []
+//    var obstacleBlockOffset = 8
     var speedController: WorldSpeedController?
     
     init(name: String = "Obstacle Manager") {
         super.init(name: name, renderLayer: .interactable)
         
         let obstacleBlock1 = ObstacleBlock()
-        obstacleBlock1.position += CGPoint(x: 0, y: 16)
+//        obstacleBlock1.position += CGPoint(x: 0, y: obstacleBlockOffset)
         scrollBlocks.append(obstacleBlock1)
         addChildNode(obstacleBlock1)
 //        nodeComponent.node.addChild(obstacleBlock1)
         let obstacleBlock2 = ObstacleBlock()
-        obstacleBlock2.position += CGPoint(x: 0, y: 16)
+//        obstacleBlock2.position += CGPoint(x: 0, y: obstacleBlockOffset)
         scrollBlocks.append(obstacleBlock2)
         addChildNode(obstacleBlock2)
 //        nodeComponent.node.addChild(obstacleBlock2)
         
-        let infScroll = InfScroll(scrollBlocks: scrollBlocks, initialPosOffset: UIProp.displaySize.width * 1.2, blocksGap: UIProp.displaySize.width * 1.2)
+        let infScroll = InfiniteScroller(scrollBlocks: scrollBlocks, initialPosOffset: UIProp.displaySize.width * 1.2, blocksGap: UIProp.displaySize.width * 1.2)
         addComponent(infScroll)
         infScroll.repositionCallback = {(block: SKNode) in
             if let obstacleBlock = block as? ObstacleBlock {
                 obstacleBlock.arrangeObstacles()
             }
         }
-//        speedController = WorldSpeedController()
+        speedController = WorldSpeedController()
         if let speedController = speedController {
             addComponent(speedController)
         }
@@ -55,9 +56,10 @@ class ObstacleManager: GameEntity {
 
 class ObstacleBlock: SKNode {
     
-    let tileDim = 20
+    let tileDim = 32
+    let obstacleBlockOffset: CGFloat = 8
     var blockHeight: Int {
-        return Int((UIProp.displaySize.height - 32)/CGFloat(tileDim)) }
+        return Int((UIProp.displaySize.height - (obstacleBlockOffset*2))/CGFloat(tileDim)) }
     var partPadding = 3
     var partSizeMinThres: Int {
         return (blockHeight / 5) }
@@ -66,7 +68,7 @@ class ObstacleBlock: SKNode {
     let obstacleWidth = 3
     let obstacleHeight = 3
     var obstacleMinGap: Int {
-        return (Int(GameplayConf.Player.playerSize.height) * 2 / tileDim) + obstacleHeight }
+        return Int(GameplayConf.Player.playerSize.height * 1.5 / CGFloat(tileDim)) + obstacleHeight }
     
     override init() {
         super.init()
@@ -90,7 +92,7 @@ class ObstacleBlock: SKNode {
         
         while totalPartsLen < (blockHeight-partPadding) {
             let randomPartSize = Int.random(in: partSizeMinThres ... partSizeMaxThres)
-            if (blockHeight-partPadding) - totalPartsLen <= partSizeMinThres {
+            if (blockHeight-partPadding) - totalPartsLen < partSizeMinThres {
                 let prevPartRange = partsRanges.popLast()
                 if let prevPartLowerBound = prevPartRange?.lowerBound {
                     partsRanges.append(prevPartLowerBound ..< (blockHeight-partPadding))
@@ -110,7 +112,7 @@ class ObstacleBlock: SKNode {
         // add obstaclee to each part
         var prevObstaclePos = 0
 //        print("count: \(partsRanges.count)")
-//        print("ranges: \(partsRanges)")
+        print("ranges: \(partsRanges)")
 //        print("block height: \(blockHeight)")
 //        print("min thres: \(partSizeMinThres), max thres: \(partSizeMaxThres)")
         for part in 0 ..< partsRanges.count {

@@ -92,7 +92,7 @@ class GameScene: SKScene {
         self.lastUpdateTime = currentTime
     }
     
-    // MARK: - Functions to manage world layers
+    // MARK: - Methods to manage world layers
     
     func loadWorldLayers() {
         for worldLayer in WorldLayer.allLayers {
@@ -104,7 +104,8 @@ class GameScene: SKScene {
         }
     }
     
-    // MARK: - Functions to manage entities and nodes
+    
+    // MARK: - Methods to manage entities, nodes, and component systems
     
     func addNode(node: SKNode, toWorldLayer worldLayer: WorldLayer) {
         let worldLayerNode = worldLayerNodes[worldLayer]!
@@ -112,30 +113,38 @@ class GameScene: SKScene {
     }
     
     func addEntity(entity: GameEntity) {
-        entities.insert(entity)
-        
-        for componentSystem in self.componentSystems {
-            componentSystem.addComponent(foundIn: entity)
-        }
-        
+        updateECSList(entity: entity, isAdd: true)
+
         if let entityNode = entity.component(ofType: NodeRenderer.self) {
             addNode(node: entityNode.node, toWorldLayer: entityNode.renderLayer)
         }
         
+        entity.didAddToScene(scene: self)
     }
     
     func removeEntity(entity: GameEntity) {
-        entities.remove(entity)
-        
-        for componentSystem in self.componentSystems {
-            componentSystem.removeComponent(foundIn: entity)
-        }
+        updateECSList(entity: entity, isAdd: false)
         
         if let entityNode = entity.component(ofType: NodeRenderer.self)?.node {
             entityNode.removeFromParent()
         }
+        
+        entity.didRemoveFromScene(scene: self)
     }
     
+    func updateECSList(entity: GameEntity, isAdd: Bool) {
+        if isAdd {
+            entities.insert(entity)
+            for componentSystem in self.componentSystems {
+                componentSystem.addComponent(foundIn: entity)
+            }
+        } else {
+            entities.remove(entity)
+            for componentSystem in self.componentSystems {
+                componentSystem.removeComponent(foundIn: entity)
+            }
+        }
+    }
     
 }
 

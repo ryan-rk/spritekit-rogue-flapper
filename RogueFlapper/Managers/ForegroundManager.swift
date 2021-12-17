@@ -27,9 +27,9 @@ class ForegroundManager: GameEntity {
 //        let foregroundBlock2 = SKSpriteNode(color: .blue, size: CGSize(width: 64, height: 64))
 //        nodeComponent.node.addChild(foregroundBlock2)
         
-        let infScroll = InfScroll(scrollBlocks: [foregroundBlock1.tileMapNode,foregroundBlock2.tileMapNode])
+        let infScroll = InfiniteScroller(scrollBlocks: [foregroundBlock1.tileMapNode,foregroundBlock2.tileMapNode])
         addComponent(infScroll)
-//        speedController = WorldSpeedController()
+        speedController = WorldSpeedController()
         if let speedController = speedController {
             addComponent(speedController)
         }
@@ -68,13 +68,13 @@ class ForegroundBlock: SKNode {
         
         let splitPartsTop = splitLenIntoParts(len: blockLen, minPartLen: minPartLen, maxPartLen: maxPartLen)
         let tileMapNodeTop = createTileMapNode(mapArray: creatHeightMap(splitParts: splitPartsTop))
-        tileMapNodeTop.anchorPoint = CGPoint(x: 0, y: 0.3)
+        tileMapNodeTop.anchorPoint = CGPoint(x: 0, y: 0.4)
         tileMapNodeTop.yScale = -1
         tileMapNodeTop.position = CGPoint(x: 0, y: UIProp.displaySize.height - 16)
         
         let splitPartsBottom = splitLenIntoParts(len: blockLen, minPartLen: minPartLen, maxPartLen: maxPartLen)
         let tileMapNodeBottom = createTileMapNode(mapArray: creatHeightMap(splitParts: splitPartsBottom))
-        tileMapNodeBottom.anchorPoint = CGPoint(x: 0, y: 0.3)
+        tileMapNodeBottom.anchorPoint = CGPoint(x: 0, y: 0.4)
         
         tileMapNode.addChildren([tileMapNodeTop, tileMapNodeBottom])
     }

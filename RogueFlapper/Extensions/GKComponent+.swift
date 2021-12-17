@@ -23,11 +23,14 @@ extension GKComponent {
     }
     
     var entityGameScene: GameScene? {
-        if let gameScene = entity?.gameScene {
-            return gameScene
-        } else {
-            return nil
+        if let gameEntity = entity as? GameEntity {
+            if let gameScene = gameEntity.gameScene {
+                return gameScene
+            } else {
+                return nil
+            }
         }
+        return nil
     }
     
 //    var entityScene: SKScene? {
